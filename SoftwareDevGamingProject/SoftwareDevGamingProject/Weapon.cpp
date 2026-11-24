@@ -14,7 +14,7 @@ Weapon::Weapon(std::string name, int shots, int damage, int ap, int strength, bo
 }
 Weapon::~Weapon()
 {
-	std::cout << "Deleting " << getName() << "\n";
+	//std::cout << "Deleting " << getName() << "\n";
 }
 
 void Weapon::printDetails()

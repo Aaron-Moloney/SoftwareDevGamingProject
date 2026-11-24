@@ -10,6 +10,9 @@ private:
 public:
 	virtual void useUpgrade(Unit& unit) const = 0;
 	virtual std::string getName() const = 0;
+
+	static Upgrade* upgradeFactory(const std::string& upgrade);
+	static Upgrade* randomUpgradeFactory();
 };
 
 class GunBuff : public Upgrade

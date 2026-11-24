@@ -7,7 +7,7 @@ Unit::Unit()
 }
 Unit::~Unit()
 {
-	std::cout << "Deleting " << getName() << "\n";
+	//std::cout << "Deleting " << getName() << "\n";
 	delete weapon;
 };
 
@@ -39,17 +39,17 @@ int Unit::woundValue(int value)
 bool Unit::attack(Unit& target)
 {
 	int sustainedCount = 0;
-	std::cout << getWeapon()->getShots();
+	//std::cout << getWeapon()->getShots();
 	//Time to roll dice
 	for (int i = 0; i < getWeapon()->getShots(); i++)
 	{
-		std::cout << "Shot number: " << i + 1 << "\n";
+		//std::cout << "Shot number: " << i + 1 << "\n";
 		//Roll to hit
 		int hitRoll = rollDice();
 		int woundRoll = rollDice();
 		if (diceHigher(getWeaponSkill(), hitRoll))
 		{
-			std::cout << "Hit.\n";
+			//std::cout << "Hit.\n";
 			//If lethal and 6 skip wound step
 			if (hitRoll == 6)
 			{
@@ -59,7 +59,7 @@ bool Unit::attack(Unit& target)
 					if (diceHigher(getSaveAfterAp(getWeapon()->getAp())))
 					{
 						target.takeHealth(getWeapon()->getDamage());
-						std::cout << "Failed save.\n";
+						//std::cout << "Failed save.\n";
 					}
 				}
 			}
@@ -72,39 +72,39 @@ bool Unit::attack(Unit& target)
 			
 			else if (diceHigher(woundValue(target.getToughness()), woundRoll))
 			{
-				std::cout << "Wound.\n";
+				//std::cout << "Wound.\n";
 				//Devastating skips save rolls on a 6 to wound.
 				if (getWeapon()->isDevastating() && woundRoll == 6)
 				{
 					target.takeHealth(getWeapon()->getDamage());
-					std::cout << "Dev wound.\n";
+					//std::cout << "Dev wound.\n";
 				}
 				if (diceHigher(getSaveAfterAp(getWeapon()->getAp())))
 				{
 					target.takeHealth(getWeapon()->getDamage());
-					std::cout << "Failed save.\n";
+					//std::cout << "Failed save.\n";
 				}
 			}
 		}
 	}
-	std::cout << "Sustained hit count: " << sustainedCount << "\n";
+	//std::cout << "Sustained hit count: " << sustainedCount << "\n";
 	for (int j = 0; j < sustainedCount; j++)
 	{
 		int woundRoll = rollDice();
 		if (diceHigher(woundValue(target.getToughness()), woundRoll))
 		{
-			std::cout << "Wound.\n";
+			//std::cout << "Wound.\n";
 			//Devastating skips save rolls on a 6 to wound.
 			if (getWeapon()->isDevastating() && woundRoll == 6)
 			{
 				target.takeHealth(getWeapon()->getDamage());
-				std::cout << "Dev wound.\n";
+				//std::cout << "Dev wound.\n";
 				break;
 			}
 			if (diceHigher(getSaveAfterAp(getWeapon()->getAp())))
 			{
 				target.takeHealth(getWeapon()->getDamage());
-				std::cout << "Failed save.\n";
+				//std::cout << "Failed save.\n";
 				break;
 			}
 		}
@@ -114,11 +114,12 @@ bool Unit::attack(Unit& target)
 
 void Unit::printDetails()
 {
-	std::cout << "Name: " << name << " | Health: " << health << " | Save: " << save << " | InvSv: " << invSv
+	std::cout << "Name: " << name << " | MaxHealth: " << maxHealth << " | Health: " << health << " | Save: " << save << " | InvSv: " << invSv
 		<< " | Toughness: " << toughness << " | WeaponSkill: " << weaponSkill << " | Weapon: " << weapon->getName() << "\n";
 }
 
 bool Unit::isAlive() const { return alive; };
+void Unit::setAlive(bool newAlive) { alive = newAlive; }
 void Unit::kill()
 {
 	setHealth(0);
@@ -176,6 +177,11 @@ void Unit::setWeapon(Weapon* newWeapon)
 	delete weapon;
 	weapon = newWeapon;
 }
+void Unit::deleteWeapon()
+{
+	delete weapon;
+	weapon = nullptr;
+}
 
 void Unit::buffUnit()
 {
@@ -190,4 +196,54 @@ void Unit::buffAllUnit()
 {
 	buffUnit();
 	weapon->buffAll();
+}
+
+Unit* Unit::unitFactory(int level)
+{
+	if (level < 3) return new GuardsMan();
+	if (level < 5)
+	{
+		int chance = rand() % 3;
+		if (chance == 0)  return new SpaceMarine();
+		else return new GuardsMan();
+	}
+	if (level < 8)
+	{
+		int chance = rand() % 3;
+		if (chance == 0)  return new GuardsMan();
+		else return new SpaceMarine();
+	}
+	if (level < 10) return new SpaceMarine();
+	if (level < 12)
+	{
+		int chance = rand() % 3;
+		if (chance == 0)  return new Eradicator();
+		else return new SpaceMarine();
+	}
+	if (level < 15)
+	{
+		int chance = rand() % 5;
+		if (chance == 0)  return new Eradicator();
+		else if (chance == 1)  return new Hellblaster();
+		else if (chance == 2)  return new Eliminator();
+		else if (chance == 3)  return new Devastator();
+		else return new SpaceMarine();
+	}
+	if (level < 30)
+	{
+		int chance = rand() % 6;
+		if (chance == 0)  return new Eradicator();
+		else if (chance == 1)  return new Hellblaster();
+		else if (chance == 2)  return new Eliminator();
+		else if (chance == 3)  return new Devastator();
+		else if (chance == 4) return new Terminator();
+		else return new SpaceMarine();
+	}
+	int chance = rand() % 6;
+	if (chance == 0)  return new Terminator();
+	else if (chance == 1)  return new Hellblaster();
+	else if (chance == 2)  return new Terminator();
+	else if (chance == 3)  return new Devastator();
+	else if (chance == 4) return new Terminator();
+	else return new Terminator();
 }

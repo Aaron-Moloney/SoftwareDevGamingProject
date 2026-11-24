@@ -28,6 +28,7 @@ public:
 	void printDetails();
 
 	bool isAlive() const;
+	void setAlive(bool newAlive);
 	void kill();
 
 	std::string getName() const;
@@ -68,10 +69,13 @@ public:
 
 	Weapon* getWeapon() const;
 	void setWeapon(Weapon* weapon);
+	void deleteWeapon();
 
 	void buffUnit();
 
 	void buffAllUnit();
+
+	static Unit* unitFactory(int level);
 };
 
 class GuardsMan : public Unit
