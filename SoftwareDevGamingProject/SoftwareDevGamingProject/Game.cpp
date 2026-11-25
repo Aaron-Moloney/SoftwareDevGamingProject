@@ -234,6 +234,7 @@ void Game::fight()
 				delete enemies.back();
 				enemies.pop_back();
 			}
+			//If all enemies are dead, break the loop
 			if (enemies.size() == 0) break;
 		}
 		if (enemies.size() != 0)
