@@ -1,6 +1,6 @@
-Jim
+Player
 1 8 6 4 6 5 4
 1
 0
-Weapon
-1 1 0 1 204 204 204
+Bolter
+2 1 1 5 0 0 0

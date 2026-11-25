@@ -154,7 +154,6 @@ void Game::base()
 //Lists items in inventory and allows the player to use them, goes back to base after
 void Game::inventory()
 {
-	std::cout << "========================================================\n";
 	if (player->listItems())
 	{
 		std::cout << "Enter the corresponding number to use an item, enter -1 to go to Base, -2 to go to Patrol.\n";
