@@ -5,25 +5,30 @@ Unit::Unit()
 {
 
 }
+//Delets the weapon to free memory
 Unit::~Unit()
 {
-	//std::cout << "Deleting " << getName() << "\n";
+	//std::cout << "Deleting " << weapon->getName() << "\n";
 	delete weapon;
 };
-
+//Returns true if dice rolls equal or greater than input
 bool Unit::diceHigher(int value)
 {
 	return value <= (rand() % 6) + 1;
 }
+//Returns true if dice rolls equal or greater than inputs, dice rolled outside of method
 bool Unit::diceHigher(int value, int roll)
 {
 	return value <= roll;
 }
+//Rolls a dice
 int Unit::rollDice()
 {
 	return (rand() % 6) + 1;
 }
 
+//Game logic to determine value needed during wound roll
+//Please refer to the Core Rules for Warhammer 40,000
 int Unit::woundValue(int value)
 {
 	if (weapon->getStrength() >= 2 * value) return 2;
@@ -36,6 +41,11 @@ int Unit::woundValue(int value)
 	return 5;
 }
 
+//Attack sequence logic
+//Please refer to the Core Rules for Warhammer 40,000 for further explanation
+//In short, dice must beat or match roll requirements eg. 4 for weaponskills
+//Then the defending unit must not fail the save roll.
+//Weapon modifiers bypass these to some degrees
 bool Unit::attack(Unit& target)
 {
 	int sustainedCount = 0;
@@ -63,12 +73,6 @@ bool Unit::attack(Unit& target)
 					}
 				}
 			}
-			//If sustained, generate extra hits for later sequencing
-			//else if (getWeapon()->isSustained() && hitRoll == 6)
-			//{
-			//	std::cout << "Sustained.\n";
-			//	sustainedCount++;
-			//}
 			
 			else if (diceHigher(woundValue(target.getToughness()), woundRoll))
 			{
@@ -112,20 +116,24 @@ bool Unit::attack(Unit& target)
 	return target.isAlive();
 }
 
+//Prints unit details
 void Unit::printDetails()
 {
 	std::cout << "Name: " << name << " | MaxHealth: " << maxHealth << " | Health: " << health << " | Save: " << save << " | InvSv: " << invSv
 		<< " | Toughness: " << toughness << " | WeaponSkill: " << weaponSkill << " | Weapon: " << weapon->getName() << "\n";
 }
 
+//Getters and setters
 bool Unit::isAlive() const { return alive; };
 void Unit::setAlive(bool newAlive) { alive = newAlive; }
+//Simple kill function, called if an attack would drop health below 0
 void Unit::kill()
 {
 	setHealth(0);
 	alive = false;
 }
 
+//Many getters, setters and incrementers, accounts for invalid values according to game logic
 std::string Unit::getName() const { return name; }
 void Unit::setName(std::string newName) { name = newName; }
 
@@ -153,6 +161,7 @@ void Unit::setInSv(int newInvSv) { newInvSv < 2 ? invSv = 2 : (newInvSv > 7 ? in
 void Unit::worsenInSv() { setInSv(getInSv() + 1); }
 void Unit::improveInSv() { setInSv(getInSv() - 1); }
 
+//Save cant be worse than insv after mods so return the best of the 2
 int Unit::getSaveAfterAp(int ap)
 {
 	if (this->getSave() + ap > this->getInSv()) return this->getInSv();
@@ -177,12 +186,14 @@ void Unit::setWeapon(Weapon* newWeapon)
 	delete weapon;
 	weapon = newWeapon;
 }
+//Free memory
 void Unit::deleteWeapon()
 {
 	delete weapon;
 	weapon = nullptr;
 }
 
+//Buff stats
 void Unit::buffUnit()
 {
 	addMaxHealth(4);
@@ -198,6 +209,8 @@ void Unit::buffAllUnit()
 	weapon->buffAll();
 }
 
+//Returns a unit based on the players level
+//Randomly chooses also
 Unit* Unit::unitFactory(int level)
 {
 	if (level < 3) return new GuardsMan();

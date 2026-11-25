@@ -2,11 +2,12 @@
 
 void Game::run()
 {
-	//Menu
-	//Base
-	//Inventory
-	//Patrol
-	//Fight
+	// 0 Menu
+	// 1 Base
+	// 2 Inventory
+	// 3 Patrol
+	// 4 Fight
+	//States swap between each other as needed
 	while (!quit)
 	{
 		switch (state)
@@ -39,11 +40,13 @@ void Game::run()
 	}
 }
 
+//Create a player object on the heap
 Game::Game()
 {
 	setPlayer(new Player());
 }
 
+//Delete the player object and all enemies in the vector
 Game::~Game()
 {
 	delete player;
@@ -53,6 +56,7 @@ Game::~Game()
 	}
 }
 
+//Display all enemies held in the vector, or say there's none
 void Game::displayEnemies()
 {
 	if (enemies.size() == 0)
@@ -68,6 +72,8 @@ void Game::displayEnemies()
 	}
 }
 
+//Main menu functionality, handles choosing saving, loading, quitting and continuing
+// Save and load are handled by the player class
 void Game::mainMenu()
 {
 	std::cout << "Welcome to the game, you will venture out and defeat enemies to upgrade your stats and wargear.\n"
@@ -108,6 +114,8 @@ void Game::mainMenu()
 	}
 }
 
+//Game menu for when the player is in the base.
+//Can move to different states or rename self or weapon
 void Game::base()
 {
 	std::cout << "In main base. Press I for Inventory, M to for Main Menu, P to start patrol, V to view your stats.\n"
@@ -143,6 +151,7 @@ void Game::base()
 	}
 }
 
+//Lists items in inventory and allows the player to use them, goes back to base after
 void Game::inventory()
 {
 	std::cout << "========================================================\n";
@@ -159,6 +168,7 @@ void Game::inventory()
 	state = 1;
 }
 
+//Generates enemies for the player to fight, based on the players current level
 void Game::gatherEnemies()
 {
 	//Clear enemy vector first
@@ -175,6 +185,7 @@ void Game::gatherEnemies()
 	}
 }
 
+//Allows the player to see the enemies in front and retreat if necessary, or to check their inventory
 void Game::patrolChoice()
 {
 	std::cout << "========================================================\n";
@@ -199,6 +210,10 @@ void Game::patrolChoice()
 	}
 }
 
+//Automatically completes an attack sequence
+//Player either wins or loses
+//if they win they're healed a bit and rewarded with a level and an upgrade
+//Otherwise they delevel and have health set to 1
 void Game::fight()
 {
 	std::cout << "========================================================\n";

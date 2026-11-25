@@ -3,6 +3,7 @@
 
 std::string GunBuff::getName() const { return "Gun Buff"; }
 
+//Applies a random upgrade to the target unit's weapon, typically used for a player unit.
 void GunBuff::useUpgrade(Unit& unit) const
 {
 	int upgradeType = rand() % 8;
@@ -37,6 +38,7 @@ void GunBuff::useUpgrade(Unit& unit) const
 			std::cout << "Improved all weapon stats.\n";
 			success = true;
 			break;
+			//These 3 stats are boolean so we cant continually add to them, re roll if they't hit
 		case 5:
 			if (!unit.getWeapon()->isLethal())
 			{
@@ -68,8 +70,10 @@ void GunBuff::useUpgrade(Unit& unit) const
 	
 }
 
+//Return the name of the buff
 std::string UnitBuff::getName() const { return "Unit Buff"; }
 
+//Applies an upgrade to the target units stats.
 void UnitBuff::useUpgrade(Unit& unit)const
 {
 	//InSv is very powerful so we filter it and others to be less likely, boosting maxhealth is the most likely
@@ -111,11 +115,13 @@ void UnitBuff::useUpgrade(Unit& unit)const
 	}
 }
 
+//Returns the name of the buff
 std::string HealthBuff::getName() const
 {
 	return "Health Buff";
 }
 
+//Buffs the target units health
 void HealthBuff::useUpgrade(Unit& unit) const
 {
 	std::cout << "Improved health by 3.\n";
@@ -123,22 +129,26 @@ void HealthBuff::useUpgrade(Unit& unit) const
 	unit.setHealth(unit.getMaxHealth());
 }
 
+//Returns the name of the buff
 std::string ShotBuff::getName() const
 {
 	return "Shot Buff";
 }
 
+//Buffs the target units weapon shot count
 void ShotBuff::useUpgrade(Unit& unit) const
 {
 	std::cout << "Improving shots by 2.\n";
 	unit.getWeapon()->addShots(2);
 }
 
+//Returns the name of the buff
 std::string Heal::getName() const
 {
 	return "Heal";
 }
 
+//Heals the target unit for an amount between 3 and their max health
 void Heal:: useUpgrade(Unit& unit) const
 {
 	int healAmount = 3 + (rand() % unit.getMaxHealth());
@@ -146,6 +156,7 @@ void Heal:: useUpgrade(Unit& unit) const
 	unit.addHealth(healAmount);
 }
 
+//Returns a new buff depending on input
 Upgrade* Upgrade::upgradeFactory(const std::string& upgrade)
 {
 	if (upgrade == "Gun Buff") return new GunBuff();
@@ -157,6 +168,7 @@ Upgrade* Upgrade::upgradeFactory(const std::string& upgrade)
 	return new Heal();
 }
 
+//Returns a random new buff, excluding a heal
 Upgrade* Upgrade::randomUpgradeFactory()
 {
 	int random = rand() % 4;
@@ -164,6 +176,4 @@ Upgrade* Upgrade::randomUpgradeFactory()
 	if (random == 1) return new UnitBuff();
 	if (random == 2) return new ShotBuff();
 	if (random == 3) return new HealthBuff();
-	//Return heal by default
-	return new Heal();
 }

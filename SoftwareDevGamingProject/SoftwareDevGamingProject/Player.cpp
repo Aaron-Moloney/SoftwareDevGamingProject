@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <string>
 
+//Default player stats
 Player::Player()
 {
 	setName("Player");
@@ -11,11 +12,9 @@ Player::Player()
 	setToughness(5);
 	setWeaponSkill(4);
 	setWeapon(new Bolter);
-	//inventory.push_back(new HealthBuff);
-	//inventory.push_back(new HealthBuff);
-	//inventory.push_back(new HealthBuff);
 }
 
+//Clears inventory and frees memory, Unit handles the weapon
 Player::~Player()
 {
 	//std::cout << "Deleting inventory items.";
@@ -25,6 +24,7 @@ Player::~Player()
 	}
 }
 
+//Lists all items held in inventory, says if empty
 bool Player::listItems()
 {
 	if (inventory.size() == 0)
@@ -42,6 +42,7 @@ bool Player::listItems()
 	return true;
 }
 
+//Uses the item at the location given, then deletes the item to free the memory and resizes the vector
 void Player::useItem(int item)
 {
 	item--;
@@ -56,28 +57,12 @@ void Player::useItem(int item)
 	inventory.erase(inventory.begin() + item);
 }
 
-//int Player::getXp() const
-//{
-//	return xp;
-//}
-//void Player::setXp(int newXp)
-//{
-//	if (newXp <= 0)
-//	{
-//		xp = 1;
-//		return;
-//	}
-//	xp = newXp;
-//}
-//void Player::addXp(int newXp)
-//{
-//	setXp(getXp() + newXp);
-//}
-
+//Getter
 int Player::getLevel() const
 {
 	return level;
 }
+//Setter, accounts for minimum allowed level
 void Player::setLevel(int newLevel)
 {
 	if (newLevel <= 0)
@@ -87,32 +72,16 @@ void Player::setLevel(int newLevel)
 	}
 	level = newLevel;
 }
+//Increments level
 void Player::levelUp()
 {
 	setLevel(getLevel() + 1);
 }
+//Decrements level
 void Player::levelDown()
 {
 	setLevel(getLevel() - 1);
 }
-
-//int Player::getXpNeeded() const
-//{
-//	return xpNeeded;
-//}
-//void Player::setXpNeeded(int newNeeded)
-//{
-//	if (newNeeded <= 0)
-//	{
-//		xpNeeded = 1;
-//		return;
-//	}
-//	xpNeeded = newNeeded;
-//}
-//void Player::increaseXpNeeded(int newNeeded)
-//{
-//	setXpNeeded(getXpNeeded() + newNeeded);
-//}
 
 int Player::getKills()
 {
@@ -132,6 +101,7 @@ void Player::incrementKills()
 	setKills(getKills() + 1);
 }
 
+//Saves the players stats and weapon stats to a file
 void Player::savePlayer() const
 {
 	std::ofstream file("playerSave.txt");
@@ -164,6 +134,8 @@ void Player::savePlayer() const
 	}
 	
 }
+//Updates the players stats based on whats read from the files.
+//Must construct a custom weapon as upgrades will mean there's no template to choose from
 void Player::loadPlayer()
 {
 	std::ifstream file("playerSave.txt");
@@ -187,9 +159,7 @@ void Player::loadPlayer()
 	setInSv(invSv);
 	setToughness(toughness);
 	setWeaponSkill(weaponSkill);
-	//setXp(xp);
 	setLevel(level);
-	//setXpNeeded(xpNeeded);
 
 	int inventorySize;
 	file >> inventorySize;
@@ -202,6 +172,7 @@ void Player::loadPlayer()
 	}
 	inventory.clear();
 	
+	//Add items based on name in file
 	for (int i = 0; i < inventorySize; i++)
 	{
 		std::string name;
@@ -216,6 +187,7 @@ void Player::loadPlayer()
 	std::string weaponName;
 	std::getline(file, weaponName);
 
+	//Create custom weapon using params
 	if (weaponName != "emptyWeapon")
 	{
 		file >> shots >> damage >> ap >> strength;
@@ -230,15 +202,17 @@ void Player::loadPlayer()
 	}
 }
 
+//Lists players level, stats and weapon stats
 void Player::listStats()
 {
 	std::cout << "========================================================\n";
-	std::cout << " | Level: " << getLevel() << "\n";
+	std::cout << "Level: " << getLevel() << "\n";
 	printDetails();
 	std::cout << "Weapon details:\n";
 	getWeapon()->printDetails();
 }
 
+//Renames player if valid input
 void Player::renameSelf()
 {
 	std::cout << "Renaming self, enter a new name: \n";
@@ -250,6 +224,7 @@ void Player::renameSelf()
 		return;
 	}
 }
+//Renames weapon if valid input
 void Player::renameWeapon()
 {
 	std::cout << "Renaming weapon, enter a new name: \n";
@@ -261,7 +236,7 @@ void Player::renameWeapon()
 		return;
 	}
 }
-
+//Adds an upgrade to the inventory
 void Player::addUpgrade(Upgrade* u)
 {
 	inventory.push_back(u);

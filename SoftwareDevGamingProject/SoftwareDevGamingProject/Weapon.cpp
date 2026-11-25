@@ -61,6 +61,7 @@ void Weapon::setDevastating(bool newDevastating) { devastating = newDevastating;
 bool Weapon::isDevastating() const { return devastating; }
 void Weapon::toggleDevastating() { devastating = !devastating; }
 
+//Buffs all non boolean stats
 void Weapon::buffAll()
 {
 	addShots();
