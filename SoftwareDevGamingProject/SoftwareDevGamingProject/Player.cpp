@@ -46,7 +46,7 @@ bool Player::listItems()
 void Player::useItem(int item)
 {
 	item--;
-	if (item < inventory.size() && item >= inventory.size())
+	if (item < inventory.size() || item >= inventory.size())
 	{
 		std::cout << "Invalid input.\n";
 		return;
@@ -221,6 +221,7 @@ void Player::renameSelf()
 	if (newName.length() > 0)
 	{
 		setName(newName);
+		std::cin.clear();
 		return;
 	}
 }
@@ -233,6 +234,7 @@ void Player::renameWeapon()
 	if (newName.length() > 0)
 	{
 		getWeapon()->setName(newName);
+		std::cin.clear();
 		return;
 	}
 }
