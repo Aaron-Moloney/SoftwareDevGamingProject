@@ -5,8 +5,6 @@
 
 class Upgrade
 {
-private:
-	std::string name;
 public:
 	virtual void useUpgrade(Unit& unit) const = 0;
 	virtual std::string getName() const = 0;
