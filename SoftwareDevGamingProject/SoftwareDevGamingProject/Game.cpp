@@ -156,15 +156,27 @@ void Game::inventory()
 {
 	if (player->listItems())
 	{
-		std::cout << "Enter the corresponding number to use an item, enter -1 to go to Base, -2 to go to Patrol.\n";
+		std::cout << "Enter the corresponding number to use an item, enter -1 to go to Base, enter -2 to start patrol.\n";
 		int input;
 		std::cin >> input;
 		if (input > 0) player->useItem(input);
-		if (input == -1) state = 1;
-		if (input == -2) state = 3;
-		std::cin.clear();
+		if (input == -1)
+		{
+			state = 1;
+			std::cin.clear();
+			return;
+		}
+		if (input <= -2)
+		{
+			state = 3;
+			std::cin.clear();
+			return;
+		}
+		//std::cout << input;
 	}
 	state = 1;
+	std::cin.clear();
+	return;
 }
 
 //Generates enemies for the player to fight, based on the players current level

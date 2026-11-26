@@ -45,16 +45,18 @@ bool Player::listItems()
 //Uses the item at the location given, then deletes the item to free the memory and resizes the vector
 void Player::useItem(int item)
 {
-	item--;
-	if (item < inventory.size() || item >= inventory.size())
+	//std::cout << inventory.size();
+	int itemToUse = item;
+	itemToUse--;
+	if (itemToUse > inventory.size())
 	{
 		std::cout << "Invalid input.\n";
 		return;
 	}
 	//int location = item - 1;
-	inventory[item]->useUpgrade(*this);
-	delete inventory[item];
-	inventory.erase(inventory.begin() + item);
+	inventory[itemToUse]->useUpgrade(*this);
+	delete inventory[itemToUse];
+	inventory.erase(inventory.begin() + itemToUse);
 }
 
 //Getter
@@ -148,7 +150,7 @@ void Player::loadPlayer()
 	std::string name;
 	bool alive;
 	int maxHealth, health, save, invSv, toughness, weaponSkill;
-	int xp, level, xpNeeded;
+	int level;
 	file >> name >> alive >> maxHealth >> health>> save >> invSv >> toughness >> weaponSkill >> level;
 
 	setName(name);

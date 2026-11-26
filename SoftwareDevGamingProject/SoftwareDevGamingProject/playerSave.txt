@@ -1,0 +1,7 @@
+Player
+1 10 10 4 6 5 3
+5
+1
+Health Buff
+Bolter
+2 1 1 6 1 0 0
