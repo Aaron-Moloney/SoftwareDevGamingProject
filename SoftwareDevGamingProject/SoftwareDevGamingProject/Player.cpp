@@ -141,7 +141,7 @@ void Player::loadPlayer()
 	std::ifstream file("playerSave.txt");
 	if (!file)
 	{
-		std::cout << "No save present, create new save instead.\n";
+		std::cout << "No save present, create a new save instead.\n";
 		return;
 	}
 	
@@ -149,7 +149,7 @@ void Player::loadPlayer()
 	bool alive;
 	int maxHealth, health, save, invSv, toughness, weaponSkill;
 	int xp, level, xpNeeded;
-	file >> name >> alive >> maxHealth >> health>> save >> invSv >> toughness >> weaponSkill >> xp >> level >> xpNeeded;
+	file >> name >> alive >> maxHealth >> health>> save >> invSv >> toughness >> weaponSkill >> level;
 
 	setName(name);
 	setAlive(alive);
