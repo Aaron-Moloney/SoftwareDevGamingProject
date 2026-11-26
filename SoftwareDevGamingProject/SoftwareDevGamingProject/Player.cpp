@@ -141,7 +141,7 @@ void Player::loadPlayer()
 	std::ifstream file("playerSave.txt");
 	if (!file)
 	{
-		std::cout << "No save present, create a new save instead.\n";
+		std::cout << "No save present, loading defaults.\n";
 		return;
 	}
 	
